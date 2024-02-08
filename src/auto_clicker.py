@@ -52,24 +52,24 @@ def main_loop():
     try:
         while True:
             # 步骤 1: 点参战按钮
-            wait_for_button_and_click('1_participate_button.jpg')
+            wait_for_button_and_click('assets/images/zh-tw/1_participate_button.jpg')
             
             # 步骤 2: 点決定按钮
-            wait_for_button_and_click('2_ok_button.jpg')
+            wait_for_button_and_click('assets/images/zh-tw/2_ok_button.jpg')
 
             time.sleep(1)
 
             # 步骤 3: 点出级按钮
-            wait_for_button_and_click('3_level_button.jpg')
+            wait_for_button_and_click('assets/images/zh-tw/3_level_button.jpg')
 
             # 步骤 4: 等待战斗结束（确认按钮出现）
-            wait_for_button_and_click('4_confirm_button.jpg', timeout=999999999)
+            wait_for_button_and_click('assets/images/zh-tw/4_confirm_button.jpg', timeout=999999999)
 
             # 步骤 5: 点前往下一页按钮
-            wait_for_button_and_click('5_next_page_button.jpg')
+            wait_for_button_and_click('assets/images/zh-tw/5_next_page_button.jpg')
 
             # 步骤 6: 点冒险任务一览
-            wait_for_button_and_click('6_adventure_list_button.jpg')
+            wait_for_button_and_click('assets/images/zh-tw/6_adventure_list_button.jpg')
 
             time.sleep(1.5)
     except TimeoutError as e:
