@@ -2,9 +2,10 @@
 
 from PyQt5.QtWidgets import QApplication
 from views import EntrancePage  # 从views模块导入EntranceMainWindow
+import sys
 
 def main():
-    app = QApplication([])
+    app = QApplication(sys.argv)
     main_window = EntrancePage.EntranceMainWindow()
     main_window.show()
     app.exec_()

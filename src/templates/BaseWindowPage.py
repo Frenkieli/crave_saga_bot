@@ -6,7 +6,6 @@ class BaseWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle(title)
         self.setGeometry(*geometry)
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置窗口为无边框
         self.initUI()
 
     def keyPressEvent(self, event):

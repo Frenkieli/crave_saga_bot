@@ -5,7 +5,7 @@ import numpy as np
 import time
 import random  # 导入random库
 
-def find_button(button_image_path, threshold=0.99):
+def find_button(button_image_path, threshold=0.9):
     # 加载按钮图像
     button_image = cv2.imread(button_image_path, cv2.IMREAD_UNCHANGED)
     
@@ -32,46 +32,58 @@ def click_button(button_position, button_size):
     # 移动鼠标并点击
     pyautogui.click(button_center)
 
-def wait_for_button_and_click(button_image_path, timeout=60):
-    # 等待一个随机的时间，使操作看起来更自然
-    time.sleep(random.uniform(1, 2.0))
+def wait_for_button_and_click(button_image_path, threshold=1, timeout=99):
 
     start_time = time.time()
     while True:
-        position = find_button(button_image_path)
+        position = find_button(button_image_path, threshold)
         if position:
+            time.sleep(0.2)  # 等待一小段时间，确保按钮已经完全出现在屏幕上
             click_button(position[0], position[1])
             break
         elif time.time() - start_time > timeout:
             raise TimeoutError(f"Button not found within {timeout} seconds.")
         # 在尝试之间等待一个随机的时间
-        time.sleep(random.uniform(0.5, 1.5))
+        time.sleep(random.uniform(0.2, 0.7))
+
+def check_and_click_additional_button(button_image_path, threshold=0.9, check_duration=10):
+    start_time = time.time()
+    while time.time() - start_time < check_duration:
+        position = find_button(button_image_path, threshold)
+        if position:
+            click_button(position[0], position[1])
+            return True  # 找到并点击了图片
+        time.sleep(0.5)  # 每次检查之间稍作等待
+    return False  # 指定时间内未找到图片
+
 
 # 在主循环中使用 wait_for_button_and_click 函数等待确认按钮出现
 def main_loop():
     try:
         while True:
             # 步骤 1: 点参战按钮
-            wait_for_button_and_click('assets/images/zh-tw/1_participate_button.jpg')
+            wait_for_button_and_click('assets/images/zh-tw/1_participate_button.jpg', threshold=0.97)
             
-            # 步骤 2: 点決定按钮
-            wait_for_button_and_click('assets/images/zh-tw/2_ok_button.jpg')
+            # # 步骤 2: 点決定按钮
+            wait_for_button_and_click('assets/images/zh-tw/2_ok_button.jpg', threshold=0.97)
 
-            time.sleep(1)
 
-            # 步骤 3: 点出级按钮
-            wait_for_button_and_click('assets/images/zh-tw/3_level_button.jpg')
+            # # 步骤 3: 点出级按钮
+            wait_for_button_and_click('assets/images/zh-tw/3_level_button.jpg', threshold=0.99)
+
+            # 新增步骤: 检查并点击特定图片（如果存在），如果找到则从步骤一重新开始
+            if check_and_click_additional_button('assets/images/zh-tw/ok_button.jpg', threshold=0.98, check_duration=10):
+                continue  # 如果找到图片并点击，则继续从头开始
 
             # 步骤 4: 等待战斗结束（确认按钮出现）
-            wait_for_button_and_click('assets/images/zh-tw/4_confirm_button.jpg', timeout=999999999)
+            wait_for_button_and_click('assets/images/zh-tw/4_confirm_button.jpg', threshold=0.94, timeout=999999999)
 
             # 步骤 5: 点前往下一页按钮
-            wait_for_button_and_click('assets/images/zh-tw/5_next_page_button.jpg')
+            wait_for_button_and_click('assets/images/zh-tw/5_next_page_button.jpg', threshold=0.99)
 
             # 步骤 6: 点冒险任务一览
-            wait_for_button_and_click('assets/images/zh-tw/6_adventure_list_button.jpg')
+            wait_for_button_and_click('assets/images/zh-tw/6_adventure_list_button.jpg', threshold=0.99)
 
-            time.sleep(1.5)
     except TimeoutError as e:
         print(e)  # 打印错误信息
         shutdown_system()  # 执行关机命令
